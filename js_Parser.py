@@ -86,3 +86,74 @@ def p_expression_bool(p):
                    | DISTINT var 
      '''
     pass
+
+def p_if_condition(p):
+    '''if_condition : IF LPAREN expression_bool RPAREN LBLOCK declaration_list RBLOCK
+                | IF LPAREN expression_bool RPAREN LBLOCK declaration_list RBLOCK ELSE LBLOCK declaration_list RBLOCK
+    '''
+    pass
+
+
+def p_do_condition(p):
+    '''do_condition : DO LBLOCK declaration_list RBLOCK WHILE LPAREN expression_bool RPAREN 
+    '''
+    pass
+
+
+def p_while_condition(p):
+    '''while_condition : 
+                | WHILE LPAREN expression_bool RPAREN LBLOCK declaration_list RBLOCK 
+    '''
+    pass
+
+
+def p_type(p):
+    '''type : LET
+          | CONST
+          | VAR
+    '''
+    pass
+
+
+def p_var(p):
+    '''var : ID
+           | NUM
+           | STRING
+     '''
+    pass
+
+
+def p_error(p):
+    if VERBOSE:
+        if p is not None:
+            print(
+                chr(27)+"[1;31m"+"\t ERROR: Syntax error - Unexpected token" + chr(27)+"[0m")
+            print("\t\tLine: "+str(p.lexer.lineno)+"\t=> "+str(p.value))
+        else:
+            print(chr(27)+"[1;31m"+"\t ERROR: Syntax error"+chr(27)+"[0m")
+            print("\t\tLine:  "+str(js_lexer.lexer.lineno))
+
+    else:
+        raise Exception('syntax', 'error')
+
+
+parser = yacc.yacc()
+
+if __name__ == '__main__':
+    if (len(sys.argv) > 1):
+        script = sys.argv[1]
+
+        scriptfile = open(script, 'r')
+        scriptdata = scriptfile.read()
+        # print (scriptdata)
+
+        print(chr(27)+"[0;36m"+"INICIA ANALISIS SINTACTICO"+chr(27)+"[0m")
+        parser.parse(scriptdata, tracking=False)
+        # print("Hola bebe, no tienes errores sintacticos")
+        print(chr(27)+"[0;36m"+"TERMINA ANALISIS SINTACTICO"+chr(27)+"[0m")
+
+    else:
+        print(chr(27)+"[0;31m" +
+              "Pase el archivo de script JavaScript como parametro:")
+        print(chr(27)+"[0;36m"+"\t$ python js_parser.py" +
+              chr(27)+"[1;31m"+" <filename>.js"+chr(27)+"[0m")
